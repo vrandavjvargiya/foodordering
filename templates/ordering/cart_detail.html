@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+    <div class="container">
+        <div class="row" style="margin-top: 6%">
+        <h2>Your Shopping Cart</h2>
+            <span class="badge pull-right">
+                {% with totail_items=cart|length %}
+                    {% if cart|length > 1 %}
+                        My Shopping Order:
+                        <a href="{% url "cart_detail" %}" style="color: black">
+                            {{ totail_items }} item {{ totail_items|pluralize }},  {{ cart.get_total_price }}
+                        </a>
+                        {% else %}
+                        {% comment %} Your cart is empty. {% endcomment %}
+                    {% endif %}
+                {% endwith %}
+            </span>
+        </h2>
+            <table class="table table-striped table-hover">
+                <thead style="background-color: grey">
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Remove</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+             {% for key, value in request.session.cart.items %}
+                    {% with item=value %}
+                        <tr>
+                            {% comment %} <td>
+                                <a href="">
+                                    <img src="{% if item.image %} {{ item.image.url }} {% else %} {% static 'img/default.jpg' %} {% endif %}" alt="..." style="height: 130px; width: auto">
+                                </a>
+                            </td> {% endcomment %}
+                            <td>{{ item.name }}</td>
+                            <td>
+                                <a href="{% url 'item_increment' item.product_id %}">Increament()>+</a>
+                                <a href="{% url 'item_decrement' item.product_id %}">Decrement()>-</a>
+                            </td>
+                            <td>
+                                <a href="{% url "item_clear" item.product_id %}">Remove</a>
+                            </td>
+                            <td>{{ item.price }}</td>
+                            <td>{{ item.total_price }}</td>
+                        </tr>
+                    {% endwith %}
+                {% endfor %}
+                <tr style="background-color: grey">
+                    <td><b>Total</b></td>
+                    <td colspan="4"></td>
+                    <td colspan="num"><b> {{ cart.get_total_price }}</b></td>
+                </tr>
+                </tbody>
+            </table>
+        <p class="text-right">
+            <a href="{% url "home" %}" class="btn btn-default">Continue Shopping</a>
+            <a href="{% url "checkout" %}" class="btn btn-primary">Checkout</a>
+        </p>
+        </div>
+    </div>
+{% endblock %}

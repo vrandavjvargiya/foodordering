@@ -1,0 +1,23 @@
+<!doctype html>
+{% extends 'base.html' %}
+{% load static %}
+{% comment %} {%block title%}{%endblock title%} {% endcomment %}
+{%block body%}
+
+
+<div class="container my-3">
+    <h3 align="center">Search results </h3>
+    {% if allItems|length_is:"0" %}
+   <h4>No search results</h4>
+    {% endif %}
+    {% for item in allItems  %}
+    <img src="{{item.image.url}}" />
+    {% endfor %}
+    <a href="" class="btn btn-primary">Continue Ordering</a>
+</div>
+    
+    </div>
+</div>
+{% comment %} {% endfor %} {% endcomment %}
+</div>
+{%endblock%}

@@ -13,10 +13,12 @@ class Item(models.Model):
     name = models.CharField(max_length=100)
     price = models.IntegerField()
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
-    # image = models.ImageField
+    image = models.ImageField(null=True, blank=True)
+
+
     
     def __str__(self):
-       return f"{self.cuisine}"
+       return f"{self.cuisine}: {self.name}"
         
    # def get_total_item_(self):
     #    return self.quantity * self.price

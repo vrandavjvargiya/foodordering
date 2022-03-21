@@ -3,20 +3,26 @@
 {% block body %}
     <div class="container">
         <div id="demo" class="carousel slide my-3" data-ride="carousel">
-            {% comment %} <ul class="carousel-indicators">
+            <ul class="carousel-indicators">
                 <li data-target="#demo" data-slide-to="0" class="active"></li>
                 <li data-target="#demo" data-slide-to="1" ></li>
                 <li data-target="#demo" data-slide-to="2" ></li>
-            </ul> {% endcomment %}
+            </ul>
 
-            
-                    {% for category in page_obj %}
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    {% for item in page_obj %}
                     <div class="row">
                         <div class="col-xs-3 col-sm-3 col-md-3">
                             <div class="rounded" style="width: 18rem;">
+                                <img src="{{item.image.url}}" class="card-img-top" >
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ category.name }}</h5>
-                                    <a href="{% url 'show-items' category.id %}" class="btn btn-primary">Explore</a>
+                                    <h5 class="card-title">{{ item.name }}</h5>
+                                    <a href="{% url 'cart_add' item.id c_id  %}" class="btn btn-primary ">Add To Cart</a>
+                                    {% comment %} <a href="{% url 'cart_clear' %}">Clear Cart</a>
+                                    <a href="{% url 'item_increment' value.product_id %}">Increament</a>
+                                    <a href="{% url 'item_decrement' value.product_id %}">Decrement</a> {% endcomment %}
+                                    <button class="btn btn-primary cart">Place Order!</button>
                                 </div>
                             </div>
                         </div>
@@ -26,8 +32,10 @@
             </div>
         </div>
     </div>
-   
-
+    {% for item in page_obj %}
+    
+    {{ item.cuisine_list|upper }}
+       {% endfor %}
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
@@ -45,23 +53,4 @@
             {% endif %}
         </span>
     </div>
-
-    {% block js %}
-    <script>
-        console.log('working')
-        if(localStorage.getItem('cart') == null)
-        {
-        var cart={};
-        }
-        else{
-        cart= JSON.parse(localstorage.getItem('cart'));
-        }
-        //jQuery starts here//
-        $('.cart').click(function(){
-        
-        console.log('clicked');
-        });
-        </script>
-{% endblock%}
-
 {% endblock %}

@@ -1,9 +1,30 @@
-{%extends 'base.html'%}
 
-{% block content %}
+    {%extends 'base.html'%}
 
-<div class = "container my-2">
-    <h1> Contact us</h1>
+    {% block body %}
+    
+    <div class = "container my-2">
+        <h1> Contact us</h1>
+    
+    <form>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" aria-describedby="name">
+            <div id="name" class="form-text"></div>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text"></div>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">Issue you are facing:</label>
+            <textarea class="form-control" name="content" id="content" rows="3"></textarea>               
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+    
+    {% endblock  %}
 
-
-{% endblock  %}
