@@ -1,0 +1,18 @@
+{% comment %} {%extends'base.html'%} {% endcomment %}
+<html>
+    <body>
+
+<h1>Welcome to Book My Meal</h1>
+
+<div class="user-form">
+    <form action="pay" method="POST">
+        <h2>Please enter your details</h2>
+        <input name="username" id="username" placeholder="Name" type="text" required>
+        <input name="useremail" id="useremail" placeholder="Email" type="text" required>
+        <input name="usercontact" id="usercontact" placeholder="Contact" type="text" required>
+        <input name="useraddress" id="useraddress" placeholder="Address" type="text" required>
+        <button type="submit" class="register continue">Continue</button>
+    </form>
+</div>
+</body>
+</html>

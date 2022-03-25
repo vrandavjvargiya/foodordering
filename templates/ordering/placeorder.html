@@ -1,0 +1,34 @@
+{%extends 'base.html'%}
+{%block body%}
+{% load cart_tag %}
+<div class="container">
+    <h2>Review Your Order</h2>
+</div>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-4">
+            <h3>Order Summary</h3>
+            <table>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Quantity</th>
+                  <th>Total Price</th>
+                </tr>
+                {% for key, item in request.session.cart.items %}    
+                    <tr>
+                        <td>{{item.name}}</td>
+                        <td>{{item.quantity}}</td>
+                        <td>{{ item.price|multiply:item.quantity }}</td>
+                    </tr>
+                {%endfor%}
+              </table>
+            <p class="font-weight-bold pt-4">Total{{cart_total_amount}}</p>
+
+            <a href="{% url 'pay' %}"> Proced the Payment</a>
+        </div>
+    </div>
+
+
+
+
+
+{%endblock%}

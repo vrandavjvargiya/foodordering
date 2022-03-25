@@ -19,10 +19,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">{{ item.name }}</h5>
                                     <a href="{% url 'cart_add' item.id c_id  %}" class="btn btn-primary ">Add To Cart</a>
-                                    {% comment %} <a href="{% url 'cart_clear' %}">Clear Cart</a>
-                                    <a href="{% url 'item_increment' value.product_id %}">Increament</a>
-                                    <a href="{% url 'item_decrement' value.product_id %}">Decrement</a> {% endcomment %}
-                                    <button class="btn btn-primary cart">Place Order!</button>
+                                    {% comment %} <a href=""class="btn btn-primary cart">Place Order!</a> {% endcomment %}
                                 </div>
                             </div>
                         </div>

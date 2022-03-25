@@ -13,6 +13,7 @@ from importlib.resources import path
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,9 +44,12 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'django.contrib.sites',
-    'cart'
-   
+    'cart',
+    'razorpay',
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,7 +64,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'foodordering.urls'
 
 TEMPLATES = [
-    {
+    {   
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': ['templates'],
         'APP_DIRS': True,
@@ -140,11 +144,6 @@ STATIC_URL= "/static/"
 MEDIA_ROOT= os.path.join(BASE_DIR, "media/")
 MEDIA_URL="/media/"
 
-#managing media
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#MEDIA_URL =  '/media/'
-
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -152,6 +151,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 SITE_ID = 1
-CART_SESSION_ID = 'cart'
+CART_SESSION_ID = "cart"
 LOGIN_REDIRECT_URL = "home"
-
+RAZOR_KEY_ID = 'rzp_test_8e8nSfaxDWJutX'
+RAZOR_KEY_SECRET ='1zH3RnQqea9Mns8ld9lbaF96'
+# {  "razorpay_payment_id": "pay_29QQoUBi66xm2f",  "razorpay_order_id": "order_9A33XWu170gUtm",  "razorpay_signature": "9ef4dffbfd84f1318f6739a3ce19f9d85851857ae648f114332d8401e0949a3d"}

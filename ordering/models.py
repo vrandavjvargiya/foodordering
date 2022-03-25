@@ -14,35 +14,44 @@ class Item(models.Model):
     price = models.IntegerField()
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
     image = models.ImageField(null=True, blank=True)
-
-
     
     def __str__(self):
        return f"{self.cuisine}: {self.name}"
-        
-   # def get_total_item_(self):
-    #    return self.quantity * self.price
 
 class Order(models.Model):
     STATUS_CHOICES = (("A",'Accepted'),("P",'Packed'),("OTW",'On The Way'),("Pe",'Pending'),("D",'Delivered'),("C",'Cancelled'))
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customers')
-    amount = models.IntegerField()
+    amount = models.CharField(max_length=100)
     status = models.CharField(max_length=3,choices=STATUS_CHOICES,default='Pe')
-    ordered_date = models.DateTimeField(auto_now_add=True,auto_now = False)
-    items = models.ManyToManyField(Item)
+    ordered_date = models.DateTimeField(auto_now_add=True) 
+    payment_id=models.CharField(max_length=200, null=True, blank=True)
+    paid=models.BooleanField(default=False,null=True)
+    
+    
+    # def placeorder(self):
+    #     self.save()
 
     def __str__(self):
-        return f'{self.user.first_name}' + " " +str(self.order_id)
+        return f'{self.user.first_name}' + " " +str(self.payment_id)
 
-        
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    price=models.CharField(max_length=1000)
+    total=models.CharField(max_length=1000)
+    
+    def __str__(self):
+        return self.order.user.username
+    
+    
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='address')	
     street_address = models.CharField(max_length=20)
     zipcode = models.CharField(max_length=6, null=True)
     area = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
-    default = models.BooleanField(default=False)
-    
+        
     def __str__(self):
         return f'{self.street_address}'+" , "+self.area
 

@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
+
+
 {% block body %}
+
+{% if request.session.cart|length < 1%}
+
+
+{%else%}
+{% load cart_tag %}
     <div class="container">
         <div class="row" style="margin-top: 6%">
         <h2>Your Shopping Cart</h2>
@@ -30,35 +38,32 @@
              {% for key, value in request.session.cart.items %}
                     {% with item=value %}
                         <tr>
-                            {% comment %} <td>
-                                <a href="">
-                                    <img src="{% if item.image %} {{ item.image.url }} {% else %} {% static 'img/default.jpg' %} {% endif %}" alt="..." style="height: 130px; width: auto">
-                                </a>
-                            </td> {% endcomment %}
+                          
                             <td>{{ item.name }}</td>
                             <td>
-                                <a href="{% url 'item_increment' item.product_id %}">Increament()>+</a>
-                                <a href="{% url 'item_decrement' item.product_id %}">Decrement()>-</a>
+                                <a href="{% url 'item_increment' item.product_id %}">Increament</a>
+                                <a href="{% url 'item_decrement' item.product_id %}">Decrement</a>
                             </td>
                             <td>
                                 <a href="{% url "item_clear" item.product_id %}">Remove</a>
                             </td>
                             <td>{{ item.price }}</td>
-                            <td>{{ item.total_price }}</td>
+                            <td>{{ item.price|multiply:item.quantity }}</td>
                         </tr>
                     {% endwith %}
                 {% endfor %}
                 <tr style="background-color: grey">
                     <td><b>Total</b></td>
                     <td colspan="4"></td>
-                    <td colspan="num"><b> {{ cart.get_total_price }}</b></td>
+                    <td colspan="num"><b> {{ cart_total_amount }}</b></td>
                 </tr>
                 </tbody>
             </table>
         <p class="text-right">
-            <a href="{% url "home" %}" class="btn btn-default">Continue Shopping</a>
-            <a href="{% url "checkout" %}" class="btn btn-primary">Checkout</a>
+            <a href="{% url "home" %}" class="btn btn-primary">Continue Shopping</a>
+            <a href="{% url "checkout" %}" class="btn btn-primary"> Proceed to Checkout</a>
         </p>
         </div>
     </div>
+    {% endif %}
 {% endblock %}
