@@ -21,10 +21,12 @@ class Item(models.Model):
 class Order(models.Model):
     STATUS_CHOICES = (("A",'Accepted'),("P",'Packed'),("OTW",'On The Way'),("Pe",'Pending'),("D",'Delivered'),("C",'Cancelled'))
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customers')
-    amount = models.CharField(max_length=100)
+    amount = models.IntegerField()
     status = models.CharField(max_length=3,choices=STATUS_CHOICES,default='Pe')
     ordered_date = models.DateTimeField(auto_now_add=True) 
+    razorpaypaymentid=models.CharField(max_length=200, null=True, blank=True)
     payment_id=models.CharField(max_length=200, null=True, blank=True)
+    order_id=models.CharField(max_length=200, null=True, blank=True)
     paid=models.BooleanField(default=False,null=True)
     
     
@@ -32,14 +34,14 @@ class Order(models.Model):
     #     self.save()
 
     def __str__(self):
-        return f'{self.user.first_name}' + " " +str(self.payment_id)
+        return f'{self.user.first_name}' + " " +str(self.order_id)
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.CharField(max_length=1000)
     quantity = models.IntegerField(default=1)
     price=models.CharField(max_length=1000)
-    total=models.CharField(max_length=1000)
+    total=models.IntegerField()
     
     def __str__(self):
         return self.order.user.username

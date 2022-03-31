@@ -1,13 +1,15 @@
 
+from audioop import reverse
 from cProfile import Profile
 from http import client
-# from email.headerregistry import Address
+from itertools import product
+from locale import currency
 from multiprocessing import context
-# from tkinter import Menu
+from operator import imod
+from pickle import TRUE
 from unicodedata import name
 from unittest import result
-from urllib import request
-
+from urllib import request, response
 from django.conf import settings
 import razorpay
 from django.shortcuts import render,redirect
@@ -18,13 +20,16 @@ from django.core.paginator import Paginator
 from ordering.models import Item
 from django.contrib.auth.decorators import login_required
 from cart.cart import Cart
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.db.models import Q
-# from cart.context_processor import cart_total_amount 
 
-client=razorpay.Client(auth=(settings.RAZOR_KEY_ID,settings.RAZOR_KEY_SECRET))
-def app_create():
-    return render('app.html')   
+client=razorpay.Client(auth=('rzp_test_8e8nSfaxDWJutX','1zH3RnQqea9Mns8ld9lbaF96'))
+
+# def payment_status():
+#     response=request.Post
+#     print (response)
+#     return render('success.html')   
 
 def index(request):
     cuisine_list = Cuisine.objects.all()
@@ -124,43 +129,71 @@ def cart_detail(request):
     return render(request, 'ordering/cart_detail.html')   
 
 def checkout(request):
-    total = 0.0
-    orderlines = []
-    for k, item in request.session['cart'].items():
-        total += item['quantity']*float(item['price'])
-    
-    payment = client.order.create({
-        "amount": total, 
-        "currency": "INR"
-    })
-    order = Order.objects.create(user=request.user, amount=total, payment_id=payment['id'])
-    for k, item in request.session['cart'].items():
-        total += item['quantity']*float(item['price'])
-        orderlines.append(
-            OrderItem(
-                item_id=int(item['product_id']),
-                quantity=item['quantity'],
-                price=item['price'],
-                order=order
-            )
-        )
-    objs = OrderItem.objects.bulk_create(orderlines)
-    context = {
-        'order_id' : payment['id'],
-        'total' : total
-        }
-    
-    request.session.get['order_id']=payment['id']
-    request.session.get['total']=total
-    
-    return render(request,'ordering/pay.html',context)
+    return render(request,'ordering/placeorder.html')
     
 def placeorder(request):
-    return render(request,'ordering/placeorder.html')
+    total = 0.0
+    for key, value in request.session["cart"].items():
+        total = total + (float(value["price"]) * value["quantity"])
+        total = total
+    payment = client.order.create(
+        {
+            "amount": total*100,
+            "currency": "INR",
+            # "payment_capture": "1",
+        }
+    )
+    # print(total_pay)
+    order_id = payment["id"]
+    payment_id=payment["id"]
+    oid = request.session.get("order_id")
+    print(oid)
+    context = {"order_id": order_id, "total_money": total,"payment_id":payment_id}
+    order = Order(
+        user=request.user,
+        amount=total,
+        order_id=oid,
+        razorpaypaymentid=payment,
+        payment_id=payment_id
+    )
+    order.save()
+    request.session["order_id"] = order.id
+    print(request.session["order_id"])
 
-def pay(request):
-    return render(request,'ordering/pay.html')
-    
+    cart = request.session.get("cart")
+    orderitem = []
+    for i in cart:
+        a = int(cart[i]["price"])
+        b = cart[i]["quantity"]
+        total = a * b         
+        print(total)
+        i = OrderItem(
+            order=order,
+            item=cart[i]["name"],
+            quantity=cart[i]["quantity"],
+            price=int(cart[i]["price"]),
+            total=total,
+        )
+        orderitem.append(i)
+        # i.save()
+    OrderItem.objects.bulk_create(orderitem)
+    if request.method == "POST":
+        print(request)
+    return render(request,'ordering/placeorder.html' , context)
 
+@csrf_exempt
+def success(request):
+    parameter = request.POST.dict()
+    if client.utility.verify_payment_signature(parameter):
+        order = Order.objects.filter(order_id=parameter["razorpay_order_id"]).first()
+        paid = True
+        return render(request, "thankyou.html", {"status": True})
+    else:
+        # TODO : Show payment fail message to user.
+        return render(request, "thankyou.html", {"status": False})                    
+                    
+                    
+def thankyou(request):
+    return render(request,'ordering/thankyou.html')
 
 

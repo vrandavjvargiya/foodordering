@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load cart_tag %}
-<title>Checkout From My Cart</title>
+<title> </title>
 {% block body %}
+<h2> Select Delivery Location </h2>
 <div class="container">
+    {% comment %} {% csrf_token %} {% endcomment %}
     <form method="POST"  class="uniForm" action=".">
         {% csrf_token %}
         {{form|crispy}}
         <div class="form-group">
-            <a  class="btn btn-outline-info" href="{%url 'placeorder'%}"><button type="submit">
+            <a  class="btn btn-outline-info" href="{%url 'placeorder' %}"><button type="submit">
                 Continue</button>
             </a>
         </div>

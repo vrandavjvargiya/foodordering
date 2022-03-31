@@ -19,7 +19,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">{{ item.name }}</h5>
                                     <a href="{% url 'cart_add' item.id c_id  %}" class="btn btn-primary ">Add To Cart</a>
-                                    {% comment %} <a href=""class="btn btn-primary cart">Place Order!</a> {% endcomment %}
+                                    <a href="{% url "checkout" %}" class="btn btn-primary cart">Place Order!</a>
                                 </div>
                             </div>
                         </div>
